@@ -1,0 +1,35 @@
+[package]
+name = "mr-ulid"
+description = "Robust and Hassle-Free ULIDs (Universally Unique Lexicographically Sortable Identifier)"
+version = "1.0.0"
+edition = "2021"
+
+categories = ["encoding", "data-structures", "web-programming"]
+keywords = ["ulid", "unique", "identifier", "lexicographical"]
+
+license = "MIT"
+authors = ["Michael Roth <mail@mroth.net>"]
+
+repository = "https://github.com/mrothNET/mr-ulid"
+readme = "README.md"
+
+[package.metadata."docs.rs"]
+all-features = true
+
+[features]
+default = ["rand"]
+
+[dependencies]
+rand = { version = "0.8", optional = true, features = ["getrandom"] }
+serde = { version = "1", optional = true }
+
+[dev-dependencies]
+serde_derive = "1"
+serde_json = "1"
+
+[lints.clippy]
+pedantic = "warn"
+nursery = "warn"
+perf = "warn"
+suspicious = "warn"
+style = "warn"
