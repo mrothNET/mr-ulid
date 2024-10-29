@@ -1,11 +1,9 @@
 # mr-ulid
 
-<!--
 [![Crates.io](https://img.shields.io/crates/v/mr-ulid)](https://crates.io/crates/mr-ulid)
 [![Dependencies](https://deps.rs/repo/github/mrothNET/mr-ulid/status.svg)](https://deps.rs/repo/github/mrothNET/mr-ulid)
 [![License](https://img.shields.io/crates/l/mr-ulid)](https://github.com/mrothNET/mr-ulid/blob/main/LICENSE)
 [![Documentation](https://img.shields.io/docsrs/mr-ulid)](https://docs.rs/mr-ulid)
--->
 
 **Robust and Hassle-Free ULIDs (Universally Unique Lexicographically Sortable Identifiers)**
 
