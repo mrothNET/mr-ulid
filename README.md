@@ -18,6 +18,12 @@ By providing both `Ulid` and `ZeroableUlid` types, it serves different applicati
 - **Minimal Dependencies**: Actually no dependencies required, only `rand` enabled by default as Rust lacks a built-in random number generator.
 - **Optional Features**: Supports `serde` for serialization and deserialization.
 
+## Guarantees
+
+A notable feature of this crate is the guarantee that a sufficient number of ULIDs can be generated at any time without failing or the random part overflowing.
+
+The 80-bit random component of a ULID is slightly reduced by 10<sup>10</sup> values, resulting in a negligible reduction in entropy of approximately 0.000000000001%. This ensures that at least 10<sup>10</sup> ULIDs can be generated per _millisecond_, equating to 10<sup>13</sup> ULIDs per _second_. Such capacity exceeds the capabilities of current systems by magnitudes.
+
 ## Installation
 
 Add `mr-ulid` to your `Cargo.toml`:
@@ -92,12 +98,6 @@ fn main() {
     assert_eq!(example, deserialized);
 }
 ```
-
-## Guarantees
-
-A notable feature of this crate is the guarantee that a sufficient number of ULIDs can be generated at any time without failing or the random part overflowing.
-
-The 80-bit random component of a ULID is slightly reduced by 10<sup>10</sup> values, resulting in a negligible reduction in entropy of approximately 0.000000000001%. This ensures that at least 10<sup>10</sup> ULIDs can be generated per _millisecond_, equating to 10<sup>13</sup> ULIDs per _second_. Such capacity exceeds the capabilities of current systems by magnitudes.
 
 ## Contributing
 
