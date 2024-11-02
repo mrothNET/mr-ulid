@@ -36,7 +36,7 @@ pub fn try_to_string(ulid: u128) -> Option<String> {
     Some(s)
 }
 
-pub fn fmt_ulid(ulid: u128, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
+pub fn debug_ulid(name: &str, ulid: u128, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
     struct Timestamp(u64);
     impl std::fmt::Debug for Timestamp {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
@@ -57,7 +57,7 @@ pub fn fmt_ulid(ulid: u128, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error
     let timestamp = Timestamp((ulid >> RANDOM_BITS) as u64);
     let randomness = Randomness(ulid & RANDOM_MASK);
 
-    f.debug_struct("Ulid")
+    f.debug_struct(name)
         .field("string", &string)
         .field("timestamp", &timestamp)
         .field("randomness", &randomness)

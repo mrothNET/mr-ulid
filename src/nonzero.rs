@@ -495,7 +495,7 @@ impl Ulid {
 
 impl fmt::Debug for Ulid {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
-        util::fmt_ulid(self.0.get(), f)
+        util::debug_ulid("Ulid", self.0.get(), f)
     }
 }
 

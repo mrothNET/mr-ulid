@@ -113,14 +113,15 @@ fn test_debug_fmt() {
     let ulid1: ZeroableUlid = s.parse().unwrap();
     let ulid2: Ulid = s.parse().unwrap();
 
-    let actual1 = format!("{ulid1:?}",);
-    let actual2 = format!("{ulid2:?}",);
+    assert_eq!(
+        format!("{ulid1:?}",),
+        r#"ZeroableUlid { string: "01JAVEE2CB2R1MP14KP0AW1W1Z", timestamp: "2024-10-23T01:04:07.563Z", randomness: "16034B0493B015C0F03F" }"# // cspell:disable-line
+    );
 
-    // cspell:disable-next-line
-    let expected = r#"Ulid { string: "01JAVEE2CB2R1MP14KP0AW1W1Z", timestamp: "2024-10-23T01:04:07.563Z", randomness: "16034B0493B015C0F03F" }"#;
-
-    assert_eq!(actual1, expected);
-    assert_eq!(actual2, expected);
+    assert_eq!(
+        format!("{ulid2:?}",),
+        r#"Ulid { string: "01JAVEE2CB2R1MP14KP0AW1W1Z", timestamp: "2024-10-23T01:04:07.563Z", randomness: "16034B0493B015C0F03F" }"# // cspell:disable-line
+    );
 }
 
 #[test]

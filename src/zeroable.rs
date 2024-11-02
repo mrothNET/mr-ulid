@@ -443,7 +443,7 @@ impl ZeroableUlid {
 
 impl fmt::Debug for ZeroableUlid {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
-        util::fmt_ulid(self.0, f)
+        util::debug_ulid("ZeroableUlid", self.0, f)
     }
 }
 
