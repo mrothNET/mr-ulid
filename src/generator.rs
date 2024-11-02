@@ -1,6 +1,6 @@
 #[cfg(feature = "rand")]
 use std::time::SystemTime;
-use std::{ops::RangeInclusive, sync::Mutex};
+use std::{fmt, ops::RangeInclusive, sync::Mutex};
 
 #[cfg(feature = "rand")]
 use rand::{rngs::StdRng, Rng as _, SeedableRng as _}; // cspell:disable-line
@@ -74,6 +74,12 @@ impl EntropySourceHandle {
         Self {
             inner: InnerHandle::Custom(Box::new(source)),
         }
+    }
+}
+
+impl fmt::Debug for EntropySourceHandle {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("EntropySourceHandle { ... }")
     }
 }
 
@@ -300,5 +306,25 @@ mod tests {
         assert_eq!(u6.to_u128(), u128::MAX);
 
         assert!(Ulid::try_generate().is_none());
+    }
+
+    #[test]
+    fn test_debug() {
+        struct TestSource;
+
+        impl EntropySource for TestSource {
+            fn timestamp(&mut self) -> Option<u64> {
+                None
+            }
+            fn random(&mut self, _range: RangeInclusive<u128>) -> Option<u128> {
+                None
+            }
+        }
+
+        let handle = EntropySourceHandle::new(TestSource);
+
+        assert_eq!(format!("{handle:?}"), "EntropySourceHandle { ... }");
+        assert_eq!(format!("{STANDARD_ENTROPY_SOURCE:?}"), "EntropySourceHandle { ... }");
+        assert_eq!(format!("{NO_ENTROPY_SOURCE:?}"), "EntropySourceHandle { ... }");
     }
 }
