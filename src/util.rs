@@ -16,10 +16,10 @@ pub const fn from_parts(timestamp: u64, randomness: u128) -> Result<u128, Error>
     if timestamp > TIMESTAMP_MAX {
         Err(Error::TimestampOutOfRange)
     } else if randomness > RANDOM_MASK {
-                Err(Error::RandomnessOutOfRange)
-            } else {
+        Err(Error::RandomnessOutOfRange)
+    } else {
         let shifted_timestamp = (timestamp as u128) << RANDOM_BITS;
-                Ok(shifted_timestamp | randomness)
+        Ok(shifted_timestamp | randomness)
     }
 }
 
@@ -67,7 +67,7 @@ fn timestamp_to_string(millis: u64) -> String {
 
     const DAYS_PER_QUAD_YEAR: u64 = 4 * DAYS_PER_YEAR + 1; // leap year: every 4 years,
     const DAYS_PER_CENTURY: u64 = 25 * DAYS_PER_QUAD_YEAR - 1; // but not every 100 years,
-    const DASS_PER_QUADRICENTENNIAL: u64 = 4 * DAYS_PER_CENTURY + 1; // but again every 400 years.
+    const DAYS_PER_QUADRICENTENNIAL: u64 = 4 * DAYS_PER_CENTURY + 1; // but again every 400 years.
 
     const BASE: u64 = 1600;
     const DAYS_BASE_TO_1970: u64 = 3 * DAYS_PER_CENTURY + 1 + 70 * DAYS_PER_YEAR + 70 / 4;
@@ -80,7 +80,7 @@ fn timestamp_to_string(millis: u64) -> String {
     // days relative to year 1600
     let days = days + DAYS_BASE_TO_1970;
 
-    let (quadricentennials, days) = (days / DASS_PER_QUADRICENTENNIAL, days % DASS_PER_QUADRICENTENNIAL);
+    let (quadricentennials, days) = (days / DAYS_PER_QUADRICENTENNIAL, days % DAYS_PER_QUADRICENTENNIAL);
     let (centuries, days) = (days / DAYS_PER_CENTURY, days % DAYS_PER_CENTURY);
     let (quad_years, days) = (days / DAYS_PER_QUAD_YEAR, days % DAYS_PER_QUAD_YEAR);
 

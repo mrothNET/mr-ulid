@@ -14,13 +14,13 @@ By providing both `Ulid` and `ZeroableUlid` types, it serves different applicati
 
 - **Robust**: Generates ULIDs that are unique and strictly monotonically increasing under all circumstances, including threads, no failing, and no overflowing random part. See below for [Details](#Guarantees).
 - **Hassle-Free**: Simple API for easy usage. Customize entropy source when needed.
-- **Non-Zero ULIDs**: Provides both non-zero (`Ulid`) and zeroable (`ZeroableUlid`) types to suit different use cases.
+- **Non-Zero ULIDs**: Provides non-zero (`Ulid`) and zeroable (`ZeroableUlid`) types.
 - **Minimal Dependencies**: Actually no dependencies required, only `rand` enabled by default as Rust lacks a built-in random number generator.
 - **Optional Features**: Supports `serde` for serialization and deserialization.
 
 ## Guarantees
 
-A notable feature of this crate is the guarantee that a sufficient number of ULIDs can be generated at any time without failing or the random part overflowing.
+A notable guarantee of this crate is that a sufficient number of ULIDs can be generated at any time without failing or the random part overflowing.
 
 The 80-bit random component of a ULID is slightly reduced by 10<sup>10</sup> values, resulting in a negligible reduction in entropy of approximately 0.000000000001%. This ensures that at least 10<sup>10</sup> ULIDs can be generated per _millisecond_, equating to 10<sup>13</sup> ULIDs per _second_. Such capacity exceeds the capabilities of current systems by magnitudes.
 
@@ -32,8 +32,6 @@ Add `mr-ulid` to your `Cargo.toml`:
 [dependencies]
 mr-ulid = "1"
 ```
-
-By default, the `rand` feature is enabled.
 
 ## Quickstart
 
