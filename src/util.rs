@@ -1,6 +1,6 @@
 use std::fmt::Formatter;
 
-use crate::{base32, Error, RANDOM_BITS, RANDOM_MASK};
+use crate::{base32, Error, RANDOM_BITS, RANDOM_MASK, TIMESTAMP_MAX};
 
 pub fn as_array<const N: usize>(bytes: &[u8]) -> Result<&[u8; N], Error> {
     use std::cmp::Ordering;
@@ -13,16 +13,13 @@ pub fn as_array<const N: usize>(bytes: &[u8]) -> Result<&[u8; N], Error> {
 }
 
 pub const fn from_parts(timestamp: u64, randomness: u128) -> Result<u128, Error> {
-    match (timestamp as u128).checked_mul(1 << RANDOM_BITS) {
-        None => Err(Error::TimestampOutOfRange),
-
-        Some(shifted_timestamp) => {
-            if randomness > RANDOM_MASK {
+    if timestamp > TIMESTAMP_MAX {
+        Err(Error::TimestampOutOfRange)
+    } else if randomness > RANDOM_MASK {
                 Err(Error::RandomnessOutOfRange)
             } else {
+        let shifted_timestamp = (timestamp as u128) << RANDOM_BITS;
                 Ok(shifted_timestamp | randomness)
-            }
-        }
     }
 }
 
