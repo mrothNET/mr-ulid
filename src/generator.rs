@@ -183,9 +183,9 @@ impl Generator {
             InnerHandle::NoOp => None,
             #[cfg(feature = "rand")]
             InnerHandle::Standard => {
-                let rng = self.rng.get_or_insert_with(StdRng::from_entropy);
+                let rng = self.rng.get_or_insert_with(StdRng::from_os_rng);
                 // TODO: Once Rust 2024 arrives, `RangeInclusive` should be `Copy`, so remove `clone()` then.
-                Some(rng.gen_range(range.clone()))
+                Some(rng.random_range(range.clone()))
             }
             InnerHandle::Custom(source) => {
                 // TODO: dito
