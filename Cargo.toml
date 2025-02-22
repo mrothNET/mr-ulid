@@ -2,7 +2,7 @@
 name = "mr-ulid"
 description = "Robust and Hassle-Free ULIDs (Universally Unique Lexicographically Sortable Identifier)"
 version = "1.1.2"
-edition = "2021"
+edition = "2024"
 
 categories = ["encoding", "data-structures", "web-programming"]
 keywords = ["ulid", "unique", "identifier", "lexicographical"]

@@ -4,7 +4,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use crate::{base32, generator, util, Error, Ulid, RANDOM_BITS, RANDOM_MASK};
+use crate::{Error, RANDOM_BITS, RANDOM_MASK, Ulid, base32, generator, util};
 
 /// A ULID with even the value zero allowed.
 ///
@@ -379,8 +379,7 @@ impl ZeroableUlid {
     /// # Example
     ///
     /// ```
-    /// # main2();
-    /// # fn main2() -> Option<()> {
+    /// # { inner(); fn inner() -> Option<()> {
     /// use mr_ulid::ZeroableUlid;
     ///
     /// let u1 = ZeroableUlid::try_generate()?;
@@ -388,7 +387,7 @@ impl ZeroableUlid {
     ///
     /// assert!(u1 != u2);
     /// assert!(u1.timestamp() <= u2.timestamp());
-    /// # Some(()) }
+    /// # Some(()) }}
     /// ```
     #[must_use]
     pub fn try_generate() -> Option<Self> {
@@ -437,7 +436,7 @@ impl ZeroableUlid {
     /// - Randomness must less than 2<sup>80</sup>.
     #[must_use]
     pub const unsafe fn from_parts_unchecked(timestamp: u64, randomness: u128) -> Self {
-        Self((timestamp as u128) << RANDOM_BITS | randomness)
+        Self(((timestamp as u128) << RANDOM_BITS) | randomness)
     }
 }
 

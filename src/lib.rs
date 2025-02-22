@@ -140,7 +140,7 @@ use std::borrow::Cow;
 pub use error::Error;
 #[cfg(feature = "rand")]
 pub use generator::STANDARD_ENTROPY_SOURCE;
-pub use generator::{set_entropy_source, EntropySource, EntropySourceHandle, NO_ENTROPY_SOURCE};
+pub use generator::{EntropySource, EntropySourceHandle, NO_ENTROPY_SOURCE, set_entropy_source};
 pub use nonzero::Ulid;
 pub use zeroable::ZeroableUlid;
 

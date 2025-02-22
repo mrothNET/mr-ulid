@@ -1,11 +1,11 @@
 use std::fmt;
 
 use serde::{
-    de::{self, Deserializer, Visitor},
     Deserialize, Serialize, Serializer,
+    de::{self, Deserializer, Visitor},
 };
 
-use crate::{base32, Ulid, ZeroableUlid};
+use crate::{Ulid, ZeroableUlid, base32};
 
 impl Serialize for ZeroableUlid {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

@@ -1,6 +1,6 @@
 use std::fmt::Formatter;
 
-use crate::{base32, Error, RANDOM_BITS, RANDOM_MASK, TIMESTAMP_MAX};
+use crate::{Error, RANDOM_BITS, RANDOM_MASK, TIMESTAMP_MAX, base32};
 
 pub fn as_array<const N: usize>(bytes: &[u8]) -> Result<&[u8; N], Error> {
     use std::cmp::Ordering;

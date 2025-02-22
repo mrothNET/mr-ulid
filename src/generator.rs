@@ -3,7 +3,7 @@ use std::time::SystemTime;
 use std::{fmt, ops::RangeInclusive, sync::Mutex};
 
 #[cfg(feature = "rand")]
-use rand::{rngs::StdRng, Rng as _, SeedableRng as _}; // cspell:disable-line
+use rand::{Rng as _, SeedableRng as _, rngs::StdRng}; // cspell:disable-line
 
 use crate::{RANDOM_BITS, RANDOM_GEN_MAX, TIMESTAMP_MASK, TIMESTAMP_MAX};
 
@@ -184,7 +184,7 @@ impl Generator {
             #[cfg(feature = "rand")]
             InnerHandle::Standard => {
                 let rng = self.rng.get_or_insert_with(StdRng::from_os_rng);
-                // TODO: Once Rust 2024 arrives, `RangeInclusive` should be `Copy`, so remove `clone()` then.
+                // TODO: Once Rust 2027 arrives, `RangeInclusive` should be `Copy`, so remove `clone()` then.
                 Some(rng.random_range(range.clone()))
             }
             InnerHandle::Custom(source) => {

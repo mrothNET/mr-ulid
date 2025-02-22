@@ -5,7 +5,7 @@ use std::{
     time::{Duration, SystemTime},
 };
 
-use crate::{base32, generator, util, Error, ZeroableUlid, RANDOM_BITS, RANDOM_MASK};
+use crate::{Error, RANDOM_BITS, RANDOM_MASK, ZeroableUlid, base32, generator, util};
 
 /// A ULID which never is zero.
 ///
@@ -284,8 +284,7 @@ impl Ulid {
     /// # Example
     ///
     /// ```
-    /// # main2();
-    /// # fn main2() -> Option<()> {
+    /// # { inner(); fn inner() -> Option<()> {
     /// use mr_ulid::Ulid;
     ///
     /// let bytes: [u8; 16] = [1, 146, 192, 89, 108, 209, 79, 212, 47, 92, 221, 28, 194, 213, 67, 106];
@@ -293,7 +292,7 @@ impl Ulid {
     ///
     // cspell:disable-next-line
     /// assert_eq!(u.to_string(), "01JB05JV6H9ZA2YQ6X3K1DAGVA");
-    /// # Some(()) }
+    /// # Some(()) }}
     /// ```
     #[must_use]
     pub const fn from_bytes(bytes: [u8; 16]) -> Option<Self> {
@@ -329,8 +328,7 @@ impl Ulid {
     /// # Example
     ///
     /// ```
-    /// # main2();
-    /// # fn main2() -> Option<()> {
+    /// # { inner(); fn inner() -> Option<()> {
     /// use mr_ulid::Ulid;
     ///
     /// let n = 2091207293934528941058695985186693122_u128;
@@ -338,7 +336,7 @@ impl Ulid {
     ///
     // cspell:disable-next-line
     /// assert_eq!(u.to_string(), "01JB07NQ643XZXVHZDY0JNYR02");
-    /// # Some(()) }
+    /// # Some(()) }}
     /// ```
     #[must_use]
     pub const fn from_u128(n: u128) -> Option<Self> {
@@ -353,8 +351,7 @@ impl Ulid {
     /// # Example
     ///
     /// ```
-    /// # main2();
-    /// # fn main2() -> Option<()> {
+    /// # { inner(); fn inner() -> Option<()> {
     /// use std::num::NonZero;
     ///
     /// use mr_ulid::Ulid;
@@ -363,7 +360,7 @@ impl Ulid {
     /// let u = Ulid::from_u128(42)?;
     ///
     /// assert_eq!(u.to_non_zero_u128(), NonZero::new(42)?);
-    /// # Some(()) }
+    /// # Some(()) }}
     /// ```
     #[must_use]
     pub const fn to_non_zero_u128(self) -> NonZero<u128> {
@@ -377,8 +374,7 @@ impl Ulid {
     /// # Example
     ///
     /// ```
-    /// # main2();
-    /// # fn main2() -> Option<()> {
+    /// # { inner(); fn inner() -> Option<()> {
     /// use std::num::NonZero;
     ///
     /// use mr_ulid::Ulid;
@@ -388,7 +384,7 @@ impl Ulid {
     ///
     // cspell:disable-next-line
     /// assert_eq!(u.to_string(), "01JB07NQ643XZXVHZDY0JNYR02");
-    /// # Some(()) }
+    /// # Some(()) }}
     /// ```
     #[must_use]
     pub const fn from_non_zero_u128(non_zero: NonZero<u128>) -> Self {
@@ -404,8 +400,7 @@ impl Ulid {
     /// # Example
     ///
     /// ```
-    /// # main2();
-    /// # fn main2() -> Option<()> {
+    /// # { inner(); fn inner() -> Option<()> {
     /// use mr_ulid::Ulid;
     ///
     /// let u1 = Ulid::try_generate()?;
@@ -413,7 +408,7 @@ impl Ulid {
     ///
     /// assert!(u1 != u2);
     /// assert!(u1.timestamp() <= u2.timestamp());
-    /// # Some(()) }
+    /// # Some(()) }}
     /// ```
     #[must_use]
     pub fn try_generate() -> Option<Self> {
@@ -463,7 +458,7 @@ impl Ulid {
     /// - One part (timestamp or randomness) must be non-zero.
     #[must_use]
     pub const unsafe fn from_parts_unchecked(timestamp: u64, randomness: u128) -> Self {
-        let n = (timestamp as u128) << RANDOM_BITS | randomness;
+        let n = ((timestamp as u128) << RANDOM_BITS) | randomness;
         Self(unsafe { NonZero::new_unchecked(n) })
     }
 
