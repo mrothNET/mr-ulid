@@ -1,7 +1,7 @@
 [package]
 name = "mr-ulid"
 description = "Robust and Hassle-Free ULIDs (Universally Unique Lexicographically Sortable Identifier)"
-version = "1.2.0"
+version = "2.0.0"
 edition = "2024"
 
 categories = ["encoding", "data-structures", "web-programming"]
