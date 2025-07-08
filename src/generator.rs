@@ -98,7 +98,7 @@ impl fmt::Debug for EntropySourceHandle {
 ///
 /// mr_ulid::set_entropy_source(mr_ulid::STANDARD_ENTROPY_SOURCE);
 ///
-/// assert!(Ulid::try_generate().is_some());
+/// assert!(Ulid::try_new().is_some());
 /// ```
 #[cfg(feature = "rand")]
 pub const STANDARD_ENTROPY_SOURCE: EntropySourceHandle = EntropySourceHandle {
@@ -110,8 +110,8 @@ pub const STANDARD_ENTROPY_SOURCE: EntropySourceHandle = EntropySourceHandle {
 /// An entropy source which never generates any timestamps nor any random values.
 /// Setting this source will result in no ULIDs generated:
 ///
-/// - `Ulid::try_generate()` will always return `None`.
-/// - `Ulid::generate()` will panic.
+/// - `Ulid::try_new()` will always return `None`.
+/// - `Ulid::new()` will panic.
 ///
 /// This entropy source is the default source if the `rand` crate is not enabled.
 ///
@@ -122,7 +122,7 @@ pub const STANDARD_ENTROPY_SOURCE: EntropySourceHandle = EntropySourceHandle {
 ///
 /// mr_ulid::set_entropy_source(mr_ulid::NO_ENTROPY_SOURCE);
 ///
-/// assert_eq!(Ulid::try_generate(), None);
+/// assert_eq!(Ulid::try_new(), None);
 /// ```
 pub const NO_ENTROPY_SOURCE: EntropySourceHandle = EntropySourceHandle {
     inner: InnerHandle::NoOp,
@@ -278,34 +278,34 @@ mod tests {
     fn test_generator_overflow() {
         let _restore = FixedEntropySource::install(1, 1);
 
-        let u1 = Ulid::generate();
+        let u1 = Ulid::new();
         assert_eq!(u1.timestamp(), 1);
         assert_eq!(u1.randomness(), 1);
 
-        let u2 = Ulid::generate();
+        let u2 = Ulid::new();
         assert_eq!(u2.timestamp(), 1);
         assert_eq!(u2.randomness(), 2);
 
         manipulate_generator_last_ulid((1 << RANDOM_BITS) | ((1 << RANDOM_BITS) - 2));
 
-        let u3 = Ulid::generate();
+        let u3 = Ulid::new();
         assert_eq!(u3.timestamp(), 1);
         assert_eq!(u3.randomness(), (1 << RANDOM_BITS) - 1);
 
-        let u4 = Ulid::generate();
+        let u4 = Ulid::new();
         assert_eq!(u4.timestamp(), 2);
         assert_eq!(u4.randomness(), 0);
 
-        let u5 = Ulid::generate();
+        let u5 = Ulid::new();
         assert_eq!(u5.timestamp(), 2);
         assert_eq!(u5.randomness(), 1);
 
         manipulate_generator_last_ulid(u128::MAX - 1);
 
-        let u6 = Ulid::generate();
+        let u6 = Ulid::new();
         assert_eq!(u6.to_u128(), u128::MAX);
 
-        assert!(Ulid::try_generate().is_none());
+        assert!(Ulid::try_new().is_none());
     }
 
     #[test]

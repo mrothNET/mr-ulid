@@ -7,12 +7,12 @@
 //!
 //! ## Generating ULIDs
 //!
-//! ULIDs are generated using the [`Ulid::generate()`] method:
+//! ULIDs are generated using the [`Ulid::new()`] method:
 //!
 //! ```
 //! use mr_ulid::Ulid;
 //!
-//! let u = Ulid::generate();
+//! let u = Ulid::new();
 //! ```
 //!
 //! Each ULID generated is guaranteed to be unique and strictly monotonically increasing.
@@ -26,7 +26,7 @@
 //! ```
 //! use mr_ulid::Ulid;
 //!
-//! let u = Ulid::generate();
+//! let u = Ulid::new();
 //!
 //! println!("Generated ULID: {u}");
 //!
@@ -79,7 +79,7 @@
 //! }
 //!
 //! let e1 = Example {
-//!     id: Ulid::generate(),
+//!     id: Ulid::new(),
 //!     data: "Hello, World!".to_string(),
 //! };
 //!

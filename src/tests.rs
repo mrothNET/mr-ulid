@@ -26,11 +26,11 @@ const fn test_send_sync() {
 #[test]
 #[cfg_attr(miri, ignore)] // miri execution is to slow
 fn test_timestamp() {
-    let ulid1 = Ulid::generate();
-    let ulid2 = Ulid::generate();
-    let ulid3 = Ulid::generate();
+    let ulid1 = Ulid::new();
+    let ulid2 = Ulid::new();
+    let ulid3 = Ulid::new();
     std::thread::sleep(std::time::Duration::from_millis(1));
-    let ulid4 = Ulid::generate();
+    let ulid4 = Ulid::new();
 
     let ts1 = ulid1.timestamp();
     let ts2 = ulid2.timestamp();
@@ -46,9 +46,9 @@ fn test_timestamp() {
 
 #[test]
 fn test_monotonicity() {
-    let ulid1 = Ulid::generate();
-    let ulid2 = Ulid::generate();
-    let ulid3 = Ulid::generate();
+    let ulid1 = Ulid::new();
+    let ulid2 = Ulid::new();
+    let ulid3 = Ulid::new();
 
     assert!(ulid1 < ulid2);
     assert!(ulid2 < ulid3);
@@ -56,9 +56,9 @@ fn test_monotonicity() {
 
 #[test]
 fn test_uniques() {
-    let ulid1 = Ulid::generate();
-    let ulid2 = Ulid::generate();
-    let ulid3 = Ulid::generate();
+    let ulid1 = Ulid::new();
+    let ulid2 = Ulid::new();
+    let ulid3 = Ulid::new();
 
     assert_ne!(ulid1, ulid2);
     assert_ne!(ulid2, ulid3);
@@ -67,13 +67,13 @@ fn test_uniques() {
 
 #[test]
 fn test_parse() {
-    let ulid1 = ZeroableUlid::generate();
+    let ulid1 = ZeroableUlid::new();
     let ulid2 = ulid1.to_string().to_lowercase().parse();
     assert_eq!(ulid2, Ok(ulid1));
 
     assert_eq!(
         "oooooooooooooooooooooooooo".parse::<ZeroableUlid>(),
-        Ok(ZeroableUlid::default())
+        Ok(ZeroableUlid::zeroed())
     );
 
     assert_eq!(
@@ -92,16 +92,16 @@ fn test_parse() {
 
 #[test]
 fn test_string_length() {
-    assert_eq!(Ulid::generate().to_string().len(), 26);
+    assert_eq!(Ulid::new().to_string().len(), 26);
 }
 
 #[test]
 fn test_try_to_string() {
-    let r1 = Ulid::generate().try_to_string();
+    let r1 = Ulid::new().try_to_string();
     assert!(r1.is_some());
     assert_eq!(r1.unwrap().len(), 26);
 
-    let r2 = ZeroableUlid::generate().try_to_string();
+    let r2 = ZeroableUlid::new().try_to_string();
     assert!(r2.is_some());
     assert_eq!(r2.unwrap().len(), 26);
 }
@@ -138,7 +138,7 @@ fn test_max() {
 fn test_from_parts() {
     assert_eq!(Ulid::from_parts(0, 0), Err(Error::InvalidZero));
 
-    assert_eq!(ZeroableUlid::from_parts(0, 0), Ok(ZeroableUlid::default()));
+    assert_eq!(ZeroableUlid::from_parts(0, 0), Ok(ZeroableUlid::zeroed()));
     assert_eq!(ZeroableUlid::from_parts(0, 1), Ok(ZeroableUlid::from_u128(1)));
 
     assert!(ZeroableUlid::from_parts((1 << 48) - 1, (1 << 80) - 1).is_ok());

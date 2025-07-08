@@ -80,8 +80,8 @@ impl Ulid {
     /// ```
     /// use mr_ulid::Ulid;
     ///
-    /// let u1 = Ulid::generate();
-    /// let u2 = Ulid::generate();
+    /// let u1 = Ulid::new();
+    /// let u2 = Ulid::new();
     ///
     /// assert!(u1 != u2);
     /// assert!(u1 < u2);
@@ -95,7 +95,7 @@ impl Ulid {
     /// assert!((t1 < t2) || (t1 == t2 && r1 < r2));
     /// ```
     #[must_use]
-    pub fn generate() -> Self {
+    pub fn new() -> Self {
         Self(NonZero::new(generator::generate().unwrap()).unwrap())
     }
 
@@ -109,7 +109,7 @@ impl Ulid {
     /// ```
     /// use mr_ulid::Ulid;
     ///
-    /// let u = Ulid::generate();
+    /// let u = Ulid::new();
     ///
     /// assert!(u.timestamp() > 1704067200000); // 1st January 2024
     /// ```
@@ -127,7 +127,7 @@ impl Ulid {
     /// ```
     /// use mr_ulid::Ulid;
     ///
-    /// let u = Ulid::generate();
+    /// let u = Ulid::new();
     ///
     /// assert!(u.randomness() < (1<<80));
     /// ```
@@ -153,7 +153,7 @@ impl Ulid {
     /// use std::time::SystemTime;
     /// use mr_ulid::Ulid;
     ///
-    /// let u = Ulid::generate();
+    /// let u = Ulid::new();
     ///
     /// assert!(u.datetime() <= SystemTime::now());
     /// ```
@@ -171,7 +171,7 @@ impl Ulid {
     /// ```
     /// use mr_ulid::Ulid;
     ///
-    /// let u1 = Ulid::generate();
+    /// let u1 = Ulid::new();
     /// let u2 = u1.to_zeroable_ulid();
     ///
     /// assert_eq!(u1.to_u128(), u2.to_u128());
@@ -191,10 +191,10 @@ impl Ulid {
     /// ```
     /// use mr_ulid::{Ulid, ZeroableUlid};
     ///
-    /// let u1 = ZeroableUlid::generate();
+    /// let u1 = ZeroableUlid::new();
     /// assert!(Ulid::from_zeroable_ulid(u1).is_some());
     ///
-    /// let u2 = ZeroableUlid::new(); // Create a ZeroableUlid with zero value
+    /// let u2 = ZeroableUlid::zeroed(); // Create a ZeroableUlid with zero value
     /// assert!(Ulid::from_zeroable_ulid(u2).is_none());
     /// ```
     #[must_use]
@@ -209,7 +209,7 @@ impl Ulid {
     /// ```
     /// use mr_ulid::Ulid;
     ///
-    /// let u = Ulid::generate();
+    /// let u = Ulid::new();
     /// let (timestamp, randomness) = u.to_parts();
     ///
     /// assert_eq!(timestamp, u.timestamp());
@@ -234,7 +234,7 @@ impl Ulid {
     /// # fn main() -> Result<(), Box<dyn Error>> {
     /// use mr_ulid::Ulid;
     ///
-    /// let u1 = Ulid::generate();
+    /// let u1 = Ulid::new();
     /// let (timestamp, randomness) = u1.to_parts();
     /// let u2 = Ulid::from_parts(timestamp, randomness)?;
     ///
@@ -393,7 +393,7 @@ impl Ulid {
 
     /// Generates a new `Ulid` and never panics.
     ///
-    /// This is a variant of [`Ulid::generate()`] which never panics (with the [`STANDARD_ENTROPY_SOURCE`](generator::STANDARD_ENTROPY_SOURCE)).
+    /// This is a variant of [`Ulid::new()`] which never panics (with the [`STANDARD_ENTROPY_SOURCE`](generator::STANDARD_ENTROPY_SOURCE)).
     ///
     /// In the case of problems with the ULID-generator, this function returns `None`.
     ///
@@ -403,15 +403,15 @@ impl Ulid {
     /// # { inner(); fn inner() -> Option<()> {
     /// use mr_ulid::Ulid;
     ///
-    /// let u1 = Ulid::try_generate()?;
-    /// let u2 = Ulid::try_generate()?;
+    /// let u1 = Ulid::try_new()?;
+    /// let u2 = Ulid::try_new()?;
     ///
     /// assert!(u1 != u2);
     /// assert!(u1.timestamp() <= u2.timestamp());
     /// # Some(()) }}
     /// ```
     #[must_use]
-    pub fn try_generate() -> Option<Self> {
+    pub fn try_new() -> Option<Self> {
         Some(Self(NonZero::new(generator::generate()?)?))
     }
 
@@ -427,7 +427,7 @@ impl Ulid {
     /// use std::time::SystemTime;
     /// use mr_ulid::Ulid;
     ///
-    /// let u = Ulid::generate();
+    /// let u = Ulid::new();
     ///
     /// let datetime: Option<SystemTime> = u.try_datetime();
     /// ```
@@ -485,6 +485,12 @@ impl Ulid {
     pub const unsafe fn from_bytes_unchecked(bytes: [u8; 16]) -> Self {
         let n = u128::from_be_bytes(bytes);
         Self(unsafe { NonZero::new_unchecked(n) })
+    }
+}
+
+impl Default for Ulid {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

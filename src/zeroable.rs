@@ -54,11 +54,9 @@ impl ZeroableUlid {
     /// ```
     pub const MAX: Self = Self(u128::MAX);
 
-    /// Creates a new `ZeroableUlid` with the value zero.
+    /// Creates a `ZeroableUlid` with the value zero.
     ///
-    /// This is normally not what you want, because each created `ZeroableUlid` has always value zero.
-    ///
-    /// Chances are high, you're looking for method [`ZeroableUlid::generate()`],
+    /// Chances are high, you're looking for method [`ZeroableUlid::new()`],
     /// which creates unique `ZeroableUlid`s which are never zero.
     ///
     /// # Example
@@ -66,8 +64,8 @@ impl ZeroableUlid {
     /// ```
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u1 = ZeroableUlid::new();
-    /// let u2 = ZeroableUlid::new();
+    /// let u1 = ZeroableUlid::zeroed();
+    /// let u2 = ZeroableUlid::zeroed();
     ///
     /// assert!(u1 == u2); // They are not unique!
     ///
@@ -76,7 +74,7 @@ impl ZeroableUlid {
     ///
     /// ```
     #[must_use]
-    pub const fn new() -> Self {
+    pub const fn zeroed() -> Self {
         Self(0)
     }
 
@@ -97,8 +95,8 @@ impl ZeroableUlid {
     /// ```
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u1 = ZeroableUlid::generate();
-    /// let u2 = ZeroableUlid::generate();
+    /// let u1 = ZeroableUlid::new();
+    /// let u2 = ZeroableUlid::new();
     ///
     /// assert!(u1 != u2);
     /// assert!(u1 < u2);
@@ -112,7 +110,7 @@ impl ZeroableUlid {
     /// assert!((t1 < t2) || (t1 == t2 && r1 < r2));
     /// ```
     #[must_use]
-    pub fn generate() -> Self {
+    pub fn new() -> Self {
         Self(generator::generate().unwrap())
     }
 
@@ -125,9 +123,11 @@ impl ZeroableUlid {
     /// ```
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u1 = ZeroableUlid::new();
+    /// let u1 = ZeroableUlid::zeroed();
+    /// let u2 = ZeroableUlid::new();
     ///
     /// assert!(u1.is_zero());
+    /// assert!(!u2.is_zero());
     /// ```
     #[must_use]
     pub const fn is_zero(self) -> bool {
@@ -144,7 +144,7 @@ impl ZeroableUlid {
     /// ```
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u = ZeroableUlid::generate();
+    /// let u = ZeroableUlid::new();
     ///
     /// assert!(u.timestamp() > 1704067200000); // 1st January 2024
     /// ```
@@ -162,7 +162,7 @@ impl ZeroableUlid {
     /// ```
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u = ZeroableUlid::generate();
+    /// let u = ZeroableUlid::new();
     ///
     /// assert!(u.randomness() < (1<<80));
     /// ```
@@ -188,7 +188,7 @@ impl ZeroableUlid {
     /// use std::time::SystemTime;
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u = ZeroableUlid::generate();
+    /// let u = ZeroableUlid::new();
     ///
     /// assert!(u.datetime() <= SystemTime::now());
     /// ```
@@ -206,12 +206,12 @@ impl ZeroableUlid {
     /// ```
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u1 = ZeroableUlid::generate();
+    /// let u1 = ZeroableUlid::new();
     ///
     /// assert!(!u1.is_zero());
     /// assert!(u1.to_ulid().is_some());
     ///
-    /// let u2 = ZeroableUlid::new(); // Creates a ZeroableUlid with value zero
+    /// let u2 = ZeroableUlid::zeroed(); // Creates a ZeroableUlid with value zero
     ///
     /// assert!(u2.is_zero());
     /// assert!(u2.to_ulid().is_none());
@@ -231,7 +231,7 @@ impl ZeroableUlid {
     /// ```
     /// use mr_ulid::{Ulid, ZeroableUlid};
     ///
-    /// let u1 = Ulid::generate();
+    /// let u1 = Ulid::new();
     /// let u2 = ZeroableUlid::from_ulid(u1);
     ///
     /// assert!(!u2.is_zero());
@@ -249,7 +249,7 @@ impl ZeroableUlid {
     /// ```
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u = ZeroableUlid::generate();
+    /// let u = ZeroableUlid::new();
     /// let (timestamp, randomness) = u.to_parts();
     ///
     /// assert_eq!(timestamp, u.timestamp());
@@ -273,13 +273,13 @@ impl ZeroableUlid {
     /// # fn main() -> Result<(), Box<dyn Error>> {
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u1 = ZeroableUlid::generate();
+    /// let u1 = ZeroableUlid::zeroed();
     /// let (timestamp, randomness) = u1.to_parts();
     /// let u2 = ZeroableUlid::from_parts(timestamp, randomness)?;
     ///
     /// assert_eq!(u1, u2);
     ///
-    /// assert_eq!(ZeroableUlid::from_parts(0, 0)?, ZeroableUlid::new());
+    /// assert_eq!(ZeroableUlid::from_parts(0, 0)?, ZeroableUlid::zeroed());
     /// # Ok(()) }
     /// ```
     pub const fn from_parts(timestamp: u64, randomness: u128) -> Result<Self, Error> {
@@ -372,7 +372,7 @@ impl ZeroableUlid {
 
     /// Generates a new `ZeroableUlid` and never panics.
     ///
-    /// This is a variant of [`ZeroableUlid::generate()`] which never panics (with the [`STANDARD_ENTROPY_SOURCE`](generator::STANDARD_ENTROPY_SOURCE)).
+    /// This is a variant of [`ZeroableUlid::new()`] which never panics (with the [`STANDARD_ENTROPY_SOURCE`](generator::STANDARD_ENTROPY_SOURCE)).
     ///
     /// In the case of problems with the ULID-generator, this function returns `None`.
     ///
@@ -382,15 +382,15 @@ impl ZeroableUlid {
     /// # { inner(); fn inner() -> Option<()> {
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u1 = ZeroableUlid::try_generate()?;
-    /// let u2 = ZeroableUlid::try_generate()?;
+    /// let u1 = ZeroableUlid::try_new()?;
+    /// let u2 = ZeroableUlid::try_new()?;
     ///
     /// assert!(u1 != u2);
     /// assert!(u1.timestamp() <= u2.timestamp());
     /// # Some(()) }}
     /// ```
     #[must_use]
-    pub fn try_generate() -> Option<Self> {
+    pub fn try_new() -> Option<Self> {
         Some(Self(generator::generate()?))
     }
 
@@ -406,7 +406,7 @@ impl ZeroableUlid {
     /// use std::time::SystemTime;
     /// use mr_ulid::ZeroableUlid;
     ///
-    /// let u = ZeroableUlid::generate();
+    /// let u = ZeroableUlid::new();
     ///
     /// let datetime: Option<SystemTime> = u.try_datetime();
     /// ```

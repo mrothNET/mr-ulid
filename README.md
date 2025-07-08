@@ -40,7 +40,7 @@ use mr_ulid::Ulid;
 
 fn main() {
     // Generate a ULID
-    let u = Ulid::generate();
+    let u = Ulid::new();
 
     // Print a ULID
     println!("Generated ULID: {u}");
@@ -81,7 +81,7 @@ struct Example {
 
 fn main() {
     let example = Example {
-        id: Ulid::generate(),
+        id: Ulid::new(),
         data: "Hello, ULID!".to_string(),
     };
 
