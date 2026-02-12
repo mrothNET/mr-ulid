@@ -1,106 +1,73 @@
 # mr-ulid
 
 [![Crates.io](https://img.shields.io/crates/v/mr-ulid)](https://crates.io/crates/mr-ulid)
+[![Documentation](https://img.shields.io/docsrs/mr-ulid)](https://docs.rs/mr-ulid)
 [![Dependencies](https://deps.rs/repo/github/mrothNET/mr-ulid/status.svg)](https://deps.rs/repo/github/mrothNET/mr-ulid)
 [![License](https://img.shields.io/crates/l/mr-ulid)](https://github.com/mrothNET/mr-ulid/blob/main/LICENSE)
-[![Documentation](https://img.shields.io/docsrs/mr-ulid)](https://docs.rs/mr-ulid)
 
-**Robust and Hassle-Free ULIDs (Universally Unique Lexicographically Sortable Identifiers)**
+A Rust implementation of [ULIDs](https://github.com/ulid/spec) (Universally Unique Lexicographically Sortable Identifiers) with a focus on correctness and ease of use.
 
-`mr-ulid` is designed with a focus on correctness and ease of use. It ensures that ULIDs generated are unique and strictly monotonically increasing.
-By providing both `Ulid` and `ZeroableUlid` types, it serves different application needs, whether you require non-zero guarantees or need to handle zero ULIDs.
+Generated ULIDs are guaranteed to be unique and strictly monotonically increasing, even across threads. The random component is overflow-proof by design -- see [Overflow Protection](#overflow-protection) for details.
 
-## Key Features
-
-- **Robust**: Generates ULIDs that are unique and strictly monotonically increasing under all circumstances, including threads, no failing, and no overflowing random part. See below for [Details](#Guarantees).
-- **Hassle-Free**: Simple API for easy usage. Customize entropy source when needed.
-- **Non-Zero ULIDs**: Provides non-zero (`Ulid`) and zeroable (`ZeroableUlid`) types.
-- **Minimal Dependencies**: Actually no dependencies required, only `rand` enabled by default as Rust lacks a built-in random number generator.
-- **Optional Features**: Supports `serde` for serialization and deserialization.
-
-## Guarantees
-
-A notable guarantee of this crate is that a sufficient number of ULIDs can be generated at any time without failing or the random part overflowing.
-
-The 80-bit random component of a ULID is slightly reduced by 10<sup>10</sup> values, resulting in a negligible reduction in entropy of approximately 0.000000000001%. This ensures that at least 10<sup>10</sup> ULIDs can be generated per _millisecond_, equating to 10<sup>13</sup> ULIDs per _second_. Such capacity exceeds the capabilities of current systems by magnitudes.
-
-## Installation
-
-Add `mr-ulid` to your `Cargo.toml`:
+## Usage
 
 ```toml
 [dependencies]
-mr-ulid = "2"
+mr-ulid = "3"
 ```
-
-## Quickstart
 
 ```rust
 use mr_ulid::Ulid;
 
-fn main() {
-    // Generate a ULID
-    let u = Ulid::new();
+let u = Ulid::new();
+println!("{u}");
 
-    // Print a ULID
-    println!("Generated ULID: {u}");
-
-    // Convert a ULID to a string
-    let s = u.to_string();
-
-    // Parse the string back into a ULID
-    let parsed: Ulid = s.parse().unwrap();
-
-    // Verify that the original and parsed ULIDs are the same
-    assert_eq!(u, parsed);
-}
+let s = u.to_string();
+let parsed: Ulid = s.parse().unwrap();
+assert_eq!(u, parsed);
 ```
 
-### Serialization and Deserialization (JSON)
+## Features
 
-To enable serialization and deserialization, add `serde` and `serde_json` to your `Cargo.toml`, and enable the `serde` feature for `mr-ulid`:
+- **Overflow-proof generation** -- At least 10<sup>10</sup> ULIDs per millisecond without overflow or failure.
+- **Strict monotonicity** -- Thread-safe generation; every ULID is greater than the previous one.
+- **Non-zero type (`Ulid`)** -- Wraps `NonZero<u128>`, so `Option<Ulid>` is the same size as `Ulid` (16 bytes).
+- **Zeroable type (`ZeroableUlid`)** -- For use cases that need a zero sentinel value.
+- **Crockford Base32** -- Case-insensitive encoding with automatic `i`/`l` to `1` and `o` to `0` disambiguation.
+- **Optional `serde` support** -- Enable the `serde` feature for string-based serialization.
+- **Custom entropy sources** -- Swap in your own RNG via the `EntropySource` trait.
+- **Minimal dependencies** -- Only `rand` (enabled by default). Disable with `default-features = false`.
+
+## Serde
+
+Enable the `serde` feature for JSON (and other format) support:
 
 ```toml
 [dependencies]
-serde = { version = "1", features = ["derive"] }
-serde_json = { version = "1" }
-mr-ulid = { version = "1", features = ["serde"] }
+mr-ulid = { version = "3", features = ["serde"] }
 ```
-
-#### Example with `Serde`
 
 ```rust
 use mr_ulid::Ulid;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
-struct Example {
+#[derive(Serialize, Deserialize)]
+struct Record {
     id: Ulid,
     data: String,
 }
-
-fn main() {
-    let example = Example {
-        id: Ulid::new(),
-        data: "Hello, ULID!".to_string(),
-    };
-
-    // Serialize to JSON
-    let json = serde_json::to_string(&example).unwrap();
-    println!("Serialized JSON: {json}");
-
-    // Deserialize back to struct
-    let deserialized: Example = serde_json::from_str(&json).unwrap();
-
-    // Verify that the original and deserialized structs are the same
-    assert_eq!(example, deserialized);
-}
 ```
 
-## Contributing
+ULIDs are serialized as 26-character Crockford Base32 strings.
 
-Contributions are welcome! Whether it's a bug fix, new feature, or improvement, your help is appreciated. Please feel free to open issues or submit pull requests on the [GitHub repository](https://github.com/mrothNET/mr-ulid).
+## Overflow Protection
+
+The 80-bit random component is reduced by 10<sup>10</sup> values (a ~0.000000000001% reduction in entropy). This reserves enough space to guarantee at least 10<sup>10</sup> monotonically increasing ULIDs per millisecond -- equivalent to 10<sup>13</sup> per second -- without overflow or failure. This exceeds the capability of current hardware by orders of magnitude.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## License
 
-This project is licensed under the [MIT License](https://github.com/mrothNET/mr-ulid/blob/main/LICENSE).
+[MIT](https://github.com/mrothNET/mr-ulid/blob/main/LICENSE)
