@@ -20,7 +20,7 @@ all-features = true
 default = ["rand"]
 
 [dependencies]
-rand = { version = "0.9", optional = true, features = ["os_rng"] }
+rand = { version = "0.10", optional = true, features = ["sys_rng", "std_rng"] }
 serde = { version = "1", optional = true }
 
 [dev-dependencies]
