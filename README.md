@@ -30,7 +30,7 @@ Add `mr-ulid` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mr-ulid = "1"
+mr-ulid = "2"
 ```
 
 ## Quickstart
@@ -46,7 +46,7 @@ fn main() {
     println!("Generated ULID: {u}");
 
     // Convert a ULID to a string
-    let s = ulid.to_string();
+    let s = u.to_string();
 
     // Parse the string back into a ULID
     let parsed: Ulid = s.parse().unwrap();

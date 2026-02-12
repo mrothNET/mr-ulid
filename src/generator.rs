@@ -173,7 +173,7 @@ impl Generator {
             InnerHandle::Custom(source) => source.timestamp(),
         }?;
 
-        // The last possible millisecond (TIMESTAMP_MAX) is reserved four our guarantees.
+        // The last possible millisecond (TIMESTAMP_MAX) is reserved for our guarantees.
         (candidate < TIMESTAMP_MAX).then_some(candidate)
     }
 
@@ -215,7 +215,7 @@ static GENERATOR: Mutex<Generator> = {
     Mutex::new(generator)
 };
 
-pub fn generate() -> Option<u128> {
+pub(crate) fn generate() -> Option<u128> {
     let mut generator = GENERATOR.lock().ok()?;
     generator.generate()
 }
@@ -235,6 +235,7 @@ pub fn set_entropy_source(source: EntropySourceHandle) -> EntropySourceHandle {
     std::mem::replace(&mut generator.source, source)
 }
 
+#[cfg(feature = "rand")]
 #[cfg(test)]
 mod tests {
     use super::*;

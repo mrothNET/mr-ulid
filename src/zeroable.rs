@@ -427,13 +427,12 @@ impl ZeroableUlid {
 
     /// Creates a `ZeroableUlid` from timestamp and randomness parts without checking.
     ///
-    /// This results in undefined behaviour if timestamp or randomness parts are to large
-    /// or when both of them are zero.
+    /// This results in undefined behaviour if timestamp or randomness parts are too large.
     ///
     /// # Safety
     ///
-    /// - Timestamp must less than 2<sup>48</sup>.
-    /// - Randomness must less than 2<sup>80</sup>.
+    /// - Timestamp must be less than 2<sup>48</sup>.
+    /// - Randomness must be less than 2<sup>80</sup>.
     #[must_use]
     pub const unsafe fn from_parts_unchecked(timestamp: u64, randomness: u128) -> Self {
         Self(((timestamp as u128) << RANDOM_BITS) | randomness)

@@ -178,7 +178,7 @@ const TIMESTAMP_MASK: u128 = ((1 << TIMESTAMP_BITS) - 1) << RANDOM_BITS;
 /// assert_eq!(mr_ulid::canonicalize(s), Ok("011XJAZTHSFJZT7WD6J81R92VN".into()));
 /// ```
 ///
-pub fn canonicalize(ulid: &str) -> Result<Cow<str>, Error> {
+pub fn canonicalize(ulid: &str) -> Result<Cow<'_, str>, Error> {
     let mut buffer = *util::as_array(ulid.as_bytes())?;
     let cleaned = base32::canonicalize(&mut buffer)?;
 
@@ -212,8 +212,8 @@ pub fn canonicalize(ulid: &str) -> Result<Cow<str>, Error> {
 /// assert_eq!(mr_ulid::validate("80000000000000000000000000"), Err(mr_ulid::Error::InvalidChar));
 ///
 /// assert_eq!(mr_ulid::validate("0000000000000000000000u89$"), Err(mr_ulid::Error::InvalidChar));
-/// assert_eq!(mr_ulid::validate("xxxxxxxxxxxxxxxxxxxxxx"), Err(mr_ulid::Error::ToShort));
-/// assert_eq!(mr_ulid::validate("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"), Err(mr_ulid::Error::ToLong));
+/// assert_eq!(mr_ulid::validate("xxxxxxxxxxxxxxxxxxxxxx"), Err(mr_ulid::Error::TooShort));
+/// assert_eq!(mr_ulid::validate("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"), Err(mr_ulid::Error::TooLong));
 /// ```
 pub fn validate(ulid: &str) -> Result<(), Error> {
     let buffer = util::as_array(ulid.as_bytes())?;

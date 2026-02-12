@@ -34,7 +34,7 @@ impl<'de> Deserialize<'de> for ZeroableUlid {
     {
         struct ZeroableVisitor;
 
-        impl<'de> Visitor<'de> for ZeroableVisitor {
+        impl Visitor<'_> for ZeroableVisitor {
             type Value = ZeroableUlid;
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
                 formatter.write_str("a valid ULID string")
@@ -55,10 +55,10 @@ impl<'de> Deserialize<'de> for Ulid {
     {
         struct NonZeroVisitor;
 
-        impl<'de> Visitor<'de> for NonZeroVisitor {
+        impl Visitor<'_> for NonZeroVisitor {
             type Value = Ulid;
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("a valid ULID string not all zeros chars")
+                formatter.write_str("a valid ULID string that is not all zeros")
             }
             fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
                 value.parse().map_err(de::Error::custom)

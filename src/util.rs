@@ -2,17 +2,17 @@ use std::fmt::Formatter;
 
 use crate::{Error, RANDOM_BITS, RANDOM_MASK, TIMESTAMP_MAX, base32};
 
-pub fn as_array<const N: usize>(bytes: &[u8]) -> Result<&[u8; N], Error> {
+pub(crate) fn as_array<const N: usize>(bytes: &[u8]) -> Result<&[u8; N], Error> {
     use std::cmp::Ordering;
 
-    match bytes.len().cmp(&26) {
+    match bytes.len().cmp(&N) {
         Ordering::Equal => Ok(bytes.try_into().unwrap()),
-        Ordering::Less => Err(Error::ToShort),
-        Ordering::Greater => Err(Error::ToLong),
+        Ordering::Less => Err(Error::TooShort),
+        Ordering::Greater => Err(Error::TooLong),
     }
 }
 
-pub const fn from_parts(timestamp: u64, randomness: u128) -> Result<u128, Error> {
+pub(crate) const fn from_parts(timestamp: u64, randomness: u128) -> Result<u128, Error> {
     if timestamp > TIMESTAMP_MAX {
         Err(Error::TimestampOutOfRange)
     } else if randomness > RANDOM_MASK {
@@ -23,7 +23,7 @@ pub const fn from_parts(timestamp: u64, randomness: u128) -> Result<u128, Error>
     }
 }
 
-pub fn try_to_string(ulid: u128) -> Option<String> {
+pub(crate) fn try_to_string(ulid: u128) -> Option<String> {
     let mut s = String::new();
     s.try_reserve_exact(26).ok()?;
 
@@ -33,7 +33,7 @@ pub fn try_to_string(ulid: u128) -> Option<String> {
     Some(s)
 }
 
-pub fn debug_ulid(name: &str, ulid: u128, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
+pub(crate) fn debug_ulid(name: &str, ulid: u128, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
     struct Timestamp(u64);
     impl std::fmt::Debug for Timestamp {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {

@@ -279,7 +279,7 @@ impl Ulid {
     ///
     /// The byte array must be in network byte order (big endian).
     ///
-    /// Returns `None` if all bytes in the byte array are zero, because [`Ulid`] ist not allowed to be zero,
+    /// Returns `None` if all bytes in the byte array are zero, because [`Ulid`] is not allowed to be zero.
     ///
     /// # Example
     ///
@@ -448,13 +448,13 @@ impl Ulid {
 
     /// Creates a `Ulid` from timestamp and randomness parts without checking.
     ///
-    /// This results in undefined behaviour if timestamp or randomness parts are to large
+    /// This results in undefined behaviour if timestamp or randomness parts are too large
     /// or when both of them are zero.
     ///
     /// # Safety
     ///
-    /// - Timestamp must less than 2<sup>48</sup>.
-    /// - Randomness must less than 2<sup>80</sup>.
+    /// - Timestamp must be less than 2<sup>48</sup>.
+    /// - Randomness must be less than 2<sup>80</sup>.
     /// - One part (timestamp or randomness) must be non-zero.
     #[must_use]
     pub const unsafe fn from_parts_unchecked(timestamp: u64, randomness: u128) -> Self {
