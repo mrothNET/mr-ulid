@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.1
+
+### Improvements
+
+- Generalized the length error messages from "string is too short/long" to "input is too short/long", since they also apply to byte-slice inputs.
+- Added a minimum supported Rust version (MSRV) of 1.85 to `Cargo.toml`.
+- Expanded CI: OS × Rust-version matrix, `cargo fmt --check`, Clippy, and an MSRV job.
+
 ## 3.0.0
 
 ### Breaking Changes
