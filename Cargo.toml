@@ -28,8 +28,9 @@ serde_derive = "1"
 serde_json = "1"
 
 [lints.clippy]
-pedantic = "warn"
-nursery = "warn"
-perf = "warn"
-suspicious = "warn"
-style = "warn"
+pedantic = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }
+suspicious = { level = "warn", priority = -1 }
+style = { level = "warn", priority = -1 }
+redundant_pub_crate = "allow"

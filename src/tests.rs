@@ -1233,6 +1233,6 @@ fn test_ulid_from_u128_edge_cases() {
     assert_eq!(Ulid::from_u128(u128::MAX), Some(Ulid::MAX));
 
     // Round-trip for any value
-    let u = Ulid::from_u128(123456789).unwrap();
-    assert_eq!(u.to_u128(), 123456789);
+    let u = Ulid::from_u128(123_456_789).unwrap();
+    assert_eq!(u.to_u128(), 123_456_789);
 }
